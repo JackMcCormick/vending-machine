@@ -12,29 +12,17 @@ export function MachinePanel(props: machinePanelProps) {
     useContext(vendingContext);
 
   let numberRegEx = /^[0-9]*$/;
-  let coinType = ["Penny", "Nickel", "Dime", "Quarter"];
+  // let coinType = ["Penny", "Nickel", "Dime", "Quarter"];
 
   function handleInputOnBlur(event: any, type: string) {
-    let value = event.target.value;
+    let value = event.target.value ? event.target.value : 0;
     let validationMsg = "";
-    if (!value || !numberRegEx.test(value) || value == "0") {
-      //Test whether the type given is a coin value
-      if (coinType.find((e) => e === type)) {
-        //for Coins: if no value or bad value, give 0
-        let validationMsg = `Please enter a number greater than 0 for ${type}`;
-        setValidations(0, type, true, validationMsg);
-        calculateCoinTotal();
-      } else {
-        //For Soda: 0 is acceptable
-        setValidations(0, type, false, validationMsg);
-      }
-    } else {
-      //For a good input, set values
-      setValidations(value, type, false, validationMsg);
-      //if Coin -> Calulate total coin inventory
-      calculateCoinTotal();
-      //If Soda -> Calculate total cost
-    }
+    //Set values and validations
+    setValidations(value, type, false, validationMsg);
+    //Calulate total coin inventory
+    calculateCoinTotal();
+    //Calculate total cost
+    calculateTotalCost();
   }
 
   function setValidations(
@@ -94,6 +82,12 @@ export function MachinePanel(props: machinePanelProps) {
           sodaValidationMessage: msg,
         });
         break;
+      case "Deposit":
+        updateVendingMachineState({
+          totalDepositIsInvalid: isInvalid,
+          totalDepositValidationMessage: msg,
+        });
+        break;
     }
   }
 
@@ -106,6 +100,28 @@ export function MachinePanel(props: machinePanelProps) {
     let totalValue = pennyValue + nickelValue + dimeValue + quarterValue;
     updateVendingMachineState({
       totalCents: totalValue,
+    });
+    //Check for no money in the machine
+    let validationMsg = "";
+    if (totalValue <= 0) {
+      validationMsg = `Please enter some amount of money`;
+      setValidations(0, "Deposit", true, validationMsg);
+    } else {
+      setValidations(0, "Deposit", false, validationMsg);
+    }
+  }
+
+  function calculateTotalCost() {
+    //Calculate total cost of drinks
+    let cokeValue =
+      +vendingMachineState.cokeCount * vendingMachineState.cokeCost;
+    let pepsiValue =
+      +vendingMachineState.pepsiCount * vendingMachineState.pepsiCost;
+    let sodaValue =
+      +vendingMachineState.sodaCount * vendingMachineState.sodaCost;
+    let totalValue = cokeValue + pepsiValue + sodaValue;
+    updateVendingMachineState({
+      orderTotal: totalValue,
     });
   }
 
@@ -207,6 +223,10 @@ export function MachinePanel(props: machinePanelProps) {
               id={"amount-deposited"}
               amount={vendingMachineState.totalCents}
               label={"AMOUNT DEPOSITED:"}
+              isInvalid={vendingMachineState.totalDepositIsInvalid}
+              validationMessage={
+                vendingMachineState.totalDepositValidationMessage
+              }
             />
           </div>
         </div>

@@ -14,6 +14,8 @@ export interface VendingMachineState {
   quarterCountIsInvalid: boolean;
   quarterValidationMessage: string;
   totalCents: number;
+  totalDepositIsInvalid: boolean;
+  totalDepositValidationMessage: string;
 
   cokeAvailable: number;
   cokeCost: number;
@@ -50,6 +52,8 @@ export const vendingMachineStateDefault: VendingMachineState = {
   quarterCountIsInvalid: false,
   quarterValidationMessage: "",
   totalCents: 825,
+  totalDepositIsInvalid: false,
+  totalDepositValidationMessage: "",
 
   cokeAvailable: 5,
   cokeCost: 25,

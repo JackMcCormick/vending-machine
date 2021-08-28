@@ -5,6 +5,8 @@ export interface GSOrderTotalProps {
   id?: string;
   amount?: number;
   label?: string;
+  isInvalid?: boolean;
+  validationMessage?: string;
 }
 export interface GSOrderTotalState {}
 
@@ -32,6 +34,11 @@ export class GSOrderTotal extends React.Component<
             </div>
           )}
         </div>
+        {this.props.isInvalid && (
+          <span className={"GS-Error-Message"} id={this.props.id}>
+            {this.props.validationMessage}
+          </span>
+        )}
       </>
     );
   }
