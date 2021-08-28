@@ -1,33 +1,33 @@
 export interface VendingMachineState {
   isButtonDisabled: boolean;
 
-  pennyCount: number;
+  pennyCount: string;
   pennyCountIsInvalid: boolean;
   pennyValidationMessage: string;
-  nickelCount: number;
+  nickelCount: string;
   nickelCountIsInvalid: boolean;
   nickelValidationMessage: string;
-  dimeCount: number;
+  dimeCount: string;
   dimeCountIsInvalid: boolean;
   dimeValidationMessage: string;
-  quarterCount: number;
+  quarterCount: string;
   quarterCountIsInvalid: boolean;
   quarterValidationMessage: string;
   totalCents: number;
 
   cokeAvailable: number;
   cokeCost: number;
-  cokeCount: number;
+  cokeCount: string;
   cokeIsInvalid: boolean;
   cokeValidationMessage: string;
   pepsiAvailable: number;
   pepsiCost: number;
-  pepsiCount: number;
+  pepsiCount: string;
   pepsiIsInvalid: boolean;
   pepsiValidationMessage: string;
   sodaAvailable: number;
   sodaCost: number;
-  sodaCount: number;
+  sodaCount: string;
   sodaIsInvalid: boolean;
   sodaValidationMessage: string;
 
@@ -37,33 +37,33 @@ export interface VendingMachineState {
 export const vendingMachineStateDefault: VendingMachineState = {
   isButtonDisabled: false,
 
-  pennyCount: 100,
+  pennyCount: "100",
   pennyCountIsInvalid: false,
   pennyValidationMessage: "",
-  nickelCount: 10,
+  nickelCount: "10",
   nickelCountIsInvalid: false,
   nickelValidationMessage: "",
-  dimeCount: 5,
+  dimeCount: "5",
   dimeCountIsInvalid: false,
   dimeValidationMessage: "",
-  quarterCount: 25,
+  quarterCount: "25",
   quarterCountIsInvalid: false,
   quarterValidationMessage: "",
   totalCents: 825,
 
   cokeAvailable: 5,
   cokeCost: 25,
-  cokeCount: 0,
+  cokeCount: "0",
   cokeIsInvalid: false,
   cokeValidationMessage: "",
   pepsiAvailable: 15,
   pepsiCost: 36,
-  pepsiCount: 0,
+  pepsiCount: "0",
   pepsiIsInvalid: false,
   pepsiValidationMessage: "",
   sodaAvailable: 3,
   sodaCost: 45,
-  sodaCount: 0,
+  sodaCount: "0",
   sodaIsInvalid: false,
   sodaValidationMessage: "",
 

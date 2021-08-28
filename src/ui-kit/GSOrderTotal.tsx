@@ -1,18 +1,18 @@
 import React from "react";
 
-export interface GSOrderToalProps {
+export interface GSOrderTotalProps {
   name?: string;
   id?: string;
-  cost?: number;
+  amount?: number;
   label?: string;
 }
 export interface GSOrderTotalState {}
 
 export class GSOrderTotal extends React.Component<
-  GSOrderToalProps,
+  GSOrderTotalProps,
   GSOrderTotalState
 > {
-  constructor(props: GSOrderToalProps | Readonly<GSOrderToalProps>) {
+  constructor(props: GSOrderTotalProps | Readonly<GSOrderTotalProps>) {
     super(props);
   }
 
@@ -25,9 +25,12 @@ export class GSOrderTotal extends React.Component<
               {this.props.label}
             </label>
           </div>
-          <div className={"order-col adjust-text-height"}>
-            <p>${this.props.cost}</p>
-          </div>
+          <span>$</span>
+          {this.props.amount && this.props.amount > 0 && (
+            <div className={"order-col adjust-text-height"}>
+              <p>{(this.props.amount / 100).toFixed(2)}</p>
+            </div>
+          )}
         </div>
       </>
     );
