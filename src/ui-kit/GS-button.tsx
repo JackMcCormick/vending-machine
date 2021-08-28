@@ -5,6 +5,7 @@ export interface GSButtonProps {
   name?: string;
   id?: string;
   label?: string;
+  isDisabled?: boolean;
 }
 export interface GSButtonState {}
 
@@ -24,7 +25,12 @@ export class GSButton extends React.Component<GSButtonProps, GSButtonState> {
     const { onPress } = this.props;
     return (
       <>
-        <button className={"GS-Button"} id={this.props.id} onClick={onPress}>
+        <button
+          className={"GS-Button"}
+          id={this.props.id}
+          onClick={onPress}
+          disabled={this.props.isDisabled}
+        >
           {this.props.label}
         </button>
       </>

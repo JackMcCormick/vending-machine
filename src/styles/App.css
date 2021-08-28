@@ -43,6 +43,11 @@
   border-radius: 5px;
 }
 
+button:disabled {
+  background-color: #767676 !important;
+  cursor: default !important;
+}
+
 .GS-Button:hover {
   background-color: #4682b4;
   cursor: pointer;

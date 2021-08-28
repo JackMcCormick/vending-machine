@@ -1,6 +1,8 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
+import { useEffect } from "react";
 import { GSButton } from "../../ui-kit/GS-button";
 import { GSCoinsInput } from "../../ui-kit/GS-coins-input";
+import { GSModal } from "../../ui-kit/GS-modal";
 import { GSSodaInput } from "../../ui-kit/GS-soda-input";
 import { GSOrderTotal } from "../../ui-kit/GSOrderTotal";
 import { vendingContext } from "../vending-context";
@@ -12,17 +14,78 @@ export function MachinePanel(props: machinePanelProps) {
     useContext(vendingContext);
 
   let numberRegEx = /^[0-9]*$/;
-  // let coinType = ["Penny", "Nickel", "Dime", "Quarter"];
+  let coinType = ["Penny", "Nickel", "Dime", "Quarter"];
+  const [showModal, setShowModal] = useState(false);
+
+  function handleModalClose() {
+    setShowModal(false);
+  }
+
+  function handleModalAccept() {
+    setShowModal(false);
+  }
+
+  useEffect(() => {
+    //When the state changes, check for button disabled status
+    if (
+      vendingMachineState.pennyCountIsInvalid ||
+      vendingMachineState.nickelCountIsInvalid ||
+      vendingMachineState.dimeCountIsInvalid ||
+      vendingMachineState.quarterCountIsInvalid ||
+      vendingMachineState.cokeIsInvalid ||
+      vendingMachineState.pepsiIsInvalid ||
+      vendingMachineState.sodaIsInvalid ||
+      vendingMachineState.totalDepositIsInvalid ||
+      (vendingMachineState.cokeCount == "0" &&
+        vendingMachineState.pepsiCount == "0" &&
+        vendingMachineState.sodaCount == "0")
+    ) {
+      updateVendingMachineState({
+        isButtonDisabled: true,
+      });
+    } else {
+      updateVendingMachineState({
+        isButtonDisabled: false,
+      });
+    }
+  }, [
+    vendingMachineState.pennyCountIsInvalid,
+    vendingMachineState.nickelCountIsInvalid,
+    vendingMachineState.dimeCountIsInvalid,
+    vendingMachineState.quarterCountIsInvalid,
+    vendingMachineState.cokeIsInvalid,
+    vendingMachineState.pepsiIsInvalid,
+    vendingMachineState.sodaIsInvalid,
+    vendingMachineState.totalDepositIsInvalid,
+    vendingMachineState.cokeCount,
+    vendingMachineState.pepsiCount,
+    vendingMachineState.sodaCount,
+  ]);
 
   function handleInputOnBlur(event: any, type: string) {
     let value = event.target.value ? event.target.value : 0;
     let validationMsg = "";
-    //Set values and validations
-    setValidations(value, type, false, validationMsg);
-    //Calulate total coin inventory
-    calculateCoinTotal();
-    //Calculate total cost
-    calculateTotalCost();
+    let isInvalid = false;
+    if (!coinType.find((e) => e === type)) {
+      //If it is a soda input
+      if (
+        (type === "Coke" && value > vendingMachineState.cokeAvailable) ||
+        (type === "Pepsi" && value > vendingMachineState.pepsiAvailable) ||
+        (type === "Soda" && value > vendingMachineState.sodaAvailable)
+      ) {
+        validationMsg =
+          "Please enter a number less then or equal to the available amount";
+        isInvalid = true;
+      }
+      setValidations(value, type, isInvalid, validationMsg);
+      //Calulate total order cost
+      calculateTotalCost();
+    } else {
+      //Set values and validations
+      setValidations(value, type, isInvalid, validationMsg);
+      //Calulate total coin inventory
+      calculateCoinTotal();
+    }
   }
 
   function setValidations(
@@ -126,11 +189,20 @@ export function MachinePanel(props: machinePanelProps) {
   }
 
   function handleButtonPress(event: any) {
-    //Buy soda
+    //Show modal for accept/close
+    setShowModal(true);
   }
 
   return (
     <>
+      <GSModal
+        body={<p>Accept the charges and recieve your soda?</p>}
+        id={"vending-modal"}
+        show={showModal}
+        title={"Accept payment?"}
+        handleClose={() => handleModalClose()}
+        handleAccept={() => handleModalAccept()}
+      />
       <div className={"container"}>
         <div className={"flex-row"}>
           <h1>Coins Information</h1>
@@ -180,7 +252,7 @@ export function MachinePanel(props: machinePanelProps) {
           <div className={"col"}>
             <GSCoinsInput
               id={"dime-input"}
-              name={"dine-input"}
+              name={"dime-input"}
               label={"Dime"}
               onChange={(event: any) => {
                 if (numberRegEx.test(event.target.value)) {
@@ -316,6 +388,7 @@ export function MachinePanel(props: machinePanelProps) {
               name={"drinks-button"}
               label={"Get Drinks"}
               onPress={handleButtonPress}
+              isDisabled={vendingMachineState.isButtonDisabled}
             />
           </div>
         </div>
