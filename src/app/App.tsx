@@ -2,11 +2,11 @@ import "../styles/App.css";
 
 function App() {
   return (
-    <div className="App">
+    <section className="App">
       <header className="App-header">
         <p>Home page</p>
       </header>
-    </div>
+    </section>
   );
 }
 
