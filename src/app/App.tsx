@@ -1,11 +1,10 @@
 import "../styles/App.css";
+import { MachinePanel } from "./machinePanel/machinePanel";
 
 function App() {
   return (
     <section className="App">
-      <header className="App-header">
-        <p>Home page</p>
-      </header>
+      <MachinePanel />
     </section>
   );
 }

@@ -3,9 +3,13 @@ import { vendingContext } from "../vending-context";
 
 interface machinePanelProps {}
 
-function coinSection(props: machinePanelProps) {
+export function MachinePanel(props: machinePanelProps) {
   const { vendingMachineState, updateVendingMachineState } =
     useContext(vendingContext);
 
-  return <></>;
+  return (
+    <>
+      <div>Home Page Test</div>
+    </>
+  );
 }
