@@ -31,9 +31,9 @@ export function MachinePanel(props: machinePanelProps) {
               label={"Penny"}
               onChange={handleOnChangeTest}
               onBlur={handleOnBlurTest}
-              isInvalid={false}
-              value={"Test"}
-              validationMessage={"Test Validation Message"}
+              isInvalid={vendingMachineState.pennyCountIsInvalid}
+              value={vendingMachineState.pennyCount}
+              validationMessage={vendingMachineState.pennyValidationMessage}
             />
           </div>
           <div className={"col"}>
@@ -43,9 +43,9 @@ export function MachinePanel(props: machinePanelProps) {
               label={"Nickel"}
               onChange={handleOnChangeTest}
               onBlur={handleOnBlurTest}
-              isInvalid={false}
-              value={"Test"}
-              validationMessage={"Test Validation Message"}
+              isInvalid={vendingMachineState.nickelCountIsInvalid}
+              value={vendingMachineState.nickelCount}
+              validationMessage={vendingMachineState.nickelValidationMessage}
             />
           </div>
           <div className={"col"}>
@@ -55,9 +55,9 @@ export function MachinePanel(props: machinePanelProps) {
               label={"Dime"}
               onChange={handleOnChangeTest}
               onBlur={handleOnBlurTest}
-              isInvalid={false}
-              value={"Test"}
-              validationMessage={"Test Validation Message"}
+              isInvalid={vendingMachineState.dimeCountIsInvalid}
+              value={vendingMachineState.dimeCount}
+              validationMessage={vendingMachineState.dimeValidationMessage}
             />
           </div>
           <div className={"col"}>
@@ -67,9 +67,9 @@ export function MachinePanel(props: machinePanelProps) {
               label={"Quarter"}
               onChange={handleOnChangeTest}
               onBlur={handleOnBlurTest}
-              isInvalid={false}
-              value={"Test"}
-              validationMessage={"Test Validation Message"}
+              isInvalid={vendingMachineState.quarterCountIsInvalid}
+              value={vendingMachineState.quarterCount}
+              validationMessage={vendingMachineState.quarterValidationMessage}
             />
           </div>
         </div>
@@ -86,11 +86,11 @@ export function MachinePanel(props: machinePanelProps) {
               label={"Coke"}
               onChange={handleOnChangeTest}
               onBlur={handleOnBlurTest}
-              isInvalid={true}
-              value={"Test"}
-              validationMessage={"Test Validation Message"}
-              availableDrinks={5}
-              cost={25}
+              isInvalid={vendingMachineState.cokeIsInvalid}
+              value={vendingMachineState.cokeCount}
+              validationMessage={vendingMachineState.cokeValidationMessage}
+              availableDrinks={vendingMachineState.cokeAvailable}
+              cost={vendingMachineState.cokeCost}
             />
           </div>
         </div>
@@ -102,18 +102,18 @@ export function MachinePanel(props: machinePanelProps) {
               label={"Pepsi"}
               onChange={handleOnChangeTest}
               onBlur={handleOnBlurTest}
-              isInvalid={true}
-              value={"Test"}
-              validationMessage={"Test Validation Message"}
-              availableDrinks={15}
-              cost={36}
+              isInvalid={vendingMachineState.pepsiIsInvalid}
+              value={vendingMachineState.pepsiCount}
+              validationMessage={vendingMachineState.pepsiValidationMessage}
+              availableDrinks={vendingMachineState.pepsiAvailable}
+              cost={vendingMachineState.pepsiCost}
             />
           </div>
           <div className={"col"}>
             <GSOrderTotal
               name={"order-total"}
               id={"order-total"}
-              cost={10.22}
+              cost={vendingMachineState.orderTotal}
               label={"ORDER TOTAL:"}
             />
           </div>
@@ -126,11 +126,11 @@ export function MachinePanel(props: machinePanelProps) {
               label={"Soda"}
               onChange={handleOnChangeTest}
               onBlur={handleOnBlurTest}
-              isInvalid={true}
-              value={"Test"}
-              validationMessage={"Test Validation Message"}
-              availableDrinks={3}
-              cost={45}
+              isInvalid={vendingMachineState.sodaIsInvalid}
+              value={vendingMachineState.sodaCount}
+              validationMessage={vendingMachineState.sodaValidationMessage}
+              availableDrinks={vendingMachineState.sodaAvailable}
+              cost={vendingMachineState.sodaCost}
             />
           </div>
           <div className={"col"}>
