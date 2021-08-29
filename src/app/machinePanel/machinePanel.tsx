@@ -168,8 +168,7 @@ export function MachinePanel(props: machinePanelProps) {
         (type === "Pepsi" && value > vendingMachineState.pepsiAvailable) ||
         (type === "Soda" && value > vendingMachineState.sodaAvailable)
       ) {
-        validationMsg =
-          "Please enter a number less then or equal to the available amount";
+        validationMsg = "Drink is sold out, your purchase cannot be processed";
         isInvalid = true;
       }
       setValidations(value, type, isInvalid, validationMsg);
