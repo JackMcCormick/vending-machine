@@ -10,6 +10,7 @@ export interface GSCoinsInputProps {
   value?: string | number;
   validationMessage?: string;
   className?: string;
+  isDisabled?: boolean;
 }
 export interface GSCoinsInputState {}
 
@@ -51,6 +52,7 @@ export class GSCoinsInput extends React.Component<
               onChange={this.onChange}
               onBlur={this.onBlur}
               value={this.props.value}
+              disabled={this.props.isDisabled}
             />
             {this.props.isInvalid && (
               <span className={"GS-Error-Message"} id={this.props.id}>

@@ -16,6 +16,7 @@ export interface VendingMachineState {
   totalCents: number;
   totalDepositIsInvalid: boolean;
   totalDepositValidationMessage: string;
+  coinsDisabled: boolean;
 
   cokeAvailable: number;
   cokeCost: number;
@@ -34,6 +35,13 @@ export interface VendingMachineState {
   sodaValidationMessage: string;
 
   orderTotal: number;
+  orderResume: any[];
+
+  showChange: boolean;
+  pennyChange: number;
+  nickelChange: number;
+  dimeChange: number;
+  quarterChange: number;
 }
 
 export const vendingMachineStateDefault: VendingMachineState = {
@@ -54,6 +62,7 @@ export const vendingMachineStateDefault: VendingMachineState = {
   totalCents: 825,
   totalDepositIsInvalid: false,
   totalDepositValidationMessage: "",
+  coinsDisabled: false,
 
   cokeAvailable: 5,
   cokeCost: 25,
@@ -72,4 +81,11 @@ export const vendingMachineStateDefault: VendingMachineState = {
   sodaValidationMessage: "",
 
   orderTotal: 0,
+  orderResume: [],
+
+  showChange: false,
+  pennyChange: 0,
+  nickelChange: 0,
+  dimeChange: 0,
+  quarterChange: 0,
 };

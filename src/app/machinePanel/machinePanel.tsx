@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { useEffect } from "react";
 import { GSButton } from "../../ui-kit/GS-button";
+import { GSChangeDisplay } from "../../ui-kit/GS-change-display";
 import { GSCoinsInput } from "../../ui-kit/GS-coins-input";
 import { GSModal } from "../../ui-kit/GS-modal";
 import { GSSodaInput } from "../../ui-kit/GS-soda-input";
@@ -18,11 +19,76 @@ export function MachinePanel(props: machinePanelProps) {
   const [showModal, setShowModal] = useState(false);
 
   function handleModalClose() {
+    //Close Modal
     setShowModal(false);
   }
 
   function handleModalAccept() {
+    //Remove drink count
+    vendingMachineState.orderResume.forEach((e) =>
+      subtractCans(e["Drink"], e["Count"])
+    );
+    //Remove drink inputs
+    updateVendingMachineState({
+      cokeCount: 0,
+      pepsiCount: 0,
+      sodaCount: 0,
+    });
+    //Print change and remove coins
+    let totalChange =
+      vendingMachineState.totalCents - vendingMachineState.orderTotal;
+    let remainingChange = 0;
+    let quarterChange = 0;
+    let dimeChange = 0;
+    let nickelChange = 0;
+    let pennyChange = 0;
+    quarterChange = Math.floor(totalChange / 25);
+    remainingChange = totalChange % 25;
+    if (remainingChange > 0) {
+      dimeChange = Math.floor(remainingChange / 10);
+      remainingChange = remainingChange % 10;
+      if (remainingChange > 0) {
+        nickelChange = Math.floor(remainingChange / 5);
+        remainingChange = remainingChange % 5;
+        pennyChange = remainingChange;
+      }
+    }
+    updateVendingMachineState({
+      pennyChange: pennyChange,
+      nickelChange: nickelChange,
+      dimeChange: dimeChange,
+      quarterChange: quarterChange,
+      showChange: true,
+      pennyCount: 0,
+      nickelCount: 0,
+      dimeCount: 0,
+      quarterCount: 0,
+      totalCents: 0,
+      orderTotal: 0,
+    });
+    //If no remaining drinks then disable inputs + Validation Msg
+
+    //Close Modal
     setShowModal(false);
+  }
+
+  function subtractCans(type: string, amount: number) {
+    switch (type) {
+      case "Coke":
+        updateVendingMachineState({
+          cokeAvailable: vendingMachineState.cokeAvailable - amount,
+        });
+        break;
+      case "Pepsi":
+        updateVendingMachineState({
+          pepsiAvailable: vendingMachineState.pepsiAvailable - amount,
+        });
+        break;
+      case "Soda":
+        updateVendingMachineState({
+          sodaAvailable: vendingMachineState.sodaAvailable - amount,
+        });
+    }
   }
 
   useEffect(() => {
@@ -38,7 +104,10 @@ export function MachinePanel(props: machinePanelProps) {
       vendingMachineState.totalDepositIsInvalid ||
       (vendingMachineState.cokeCount == "0" &&
         vendingMachineState.pepsiCount == "0" &&
-        vendingMachineState.sodaCount == "0")
+        vendingMachineState.sodaCount == "0") ||
+      (vendingMachineState.cokeAvailable === 0 &&
+        vendingMachineState.pepsiAvailable === 0 &&
+        vendingMachineState.sodaAvailable === 0)
     ) {
       updateVendingMachineState({
         isButtonDisabled: true,
@@ -60,10 +129,13 @@ export function MachinePanel(props: machinePanelProps) {
     vendingMachineState.cokeCount,
     vendingMachineState.pepsiCount,
     vendingMachineState.sodaCount,
+    vendingMachineState.cokeAvailable,
+    vendingMachineState.pepsiAvailable,
+    vendingMachineState.sodaAvailable,
   ]);
 
-  function handleInputOnBlur(event: any, type: string) {
-    let value = event.target.value ? event.target.value : 0;
+  function handleInputOnBlur(input: any, type: string) {
+    let value = input ? input : 0;
     let validationMsg = "";
     let isInvalid = false;
     if (!coinType.find((e) => e === type)) {
@@ -189,14 +261,43 @@ export function MachinePanel(props: machinePanelProps) {
   }
 
   function handleButtonPress(event: any) {
+    let orderResume = [
+      { Drink: "Coke", Count: vendingMachineState.cokeCount },
+      { Drink: "Pepsi", Count: vendingMachineState.pepsiCount },
+      { Drink: "Soda", Count: vendingMachineState.sodaCount },
+    ];
+    updateVendingMachineState({
+      orderResume: orderResume,
+    });
     //Show modal for accept/close
     setShowModal(true);
   }
 
+  const modalBody = (
+    <>
+      <ul>
+        {vendingMachineState.orderResume.map((item: any) => {
+          return (
+            <>
+              {item["Count"] > 0 ? (
+                <li>
+                  {item["Drink"]}: {item["Count"]}
+                </li>
+              ) : (
+                <></>
+              )}
+            </>
+          );
+        })}
+      </ul>
+      <h6>Total cost: ${(vendingMachineState.orderTotal / 100).toFixed(2)}</h6>
+    </>
+  );
+
   return (
     <>
       <GSModal
-        body={<p>Accept the charges to recieve your soda and change?</p>}
+        body={modalBody}
         id={"vending-modal"}
         show={showModal}
         title={"Accept payment?"}
@@ -224,10 +325,13 @@ export function MachinePanel(props: machinePanelProps) {
                   });
                 }
               }}
-              onBlur={(event: any) => handleInputOnBlur(event, "Penny")}
+              onBlur={(event: any) =>
+                handleInputOnBlur(event.target.value, "Penny")
+              }
               isInvalid={vendingMachineState.pennyCountIsInvalid}
               value={vendingMachineState.pennyCount}
               validationMessage={vendingMachineState.pennyValidationMessage}
+              isDisabled={vendingMachineState.coinsDisabled}
             />
           </div>
           <div className={"col"}>
@@ -243,10 +347,13 @@ export function MachinePanel(props: machinePanelProps) {
                   });
                 }
               }}
-              onBlur={(event: any) => handleInputOnBlur(event, "Nickel")}
+              onBlur={(event: any) =>
+                handleInputOnBlur(event.target.value, "Nickel")
+              }
               isInvalid={vendingMachineState.nickelCountIsInvalid}
               value={vendingMachineState.nickelCount}
               validationMessage={vendingMachineState.nickelValidationMessage}
+              isDisabled={vendingMachineState.coinsDisabled}
             />
           </div>
           <div className={"col"}>
@@ -262,10 +369,13 @@ export function MachinePanel(props: machinePanelProps) {
                   });
                 }
               }}
-              onBlur={(event: any) => handleInputOnBlur(event, "Dime")}
+              onBlur={(event: any) =>
+                handleInputOnBlur(event.target.value, "Dime")
+              }
               isInvalid={vendingMachineState.dimeCountIsInvalid}
               value={vendingMachineState.dimeCount}
               validationMessage={vendingMachineState.dimeValidationMessage}
+              isDisabled={vendingMachineState.coinsDisabled}
             />
           </div>
           <div className={"col"}>
@@ -281,10 +391,13 @@ export function MachinePanel(props: machinePanelProps) {
                   });
                 }
               }}
-              onBlur={(event: any) => handleInputOnBlur(event, "Quarter")}
+              onBlur={(event: any) =>
+                handleInputOnBlur(event.target.value, "Quarter")
+              }
               isInvalid={vendingMachineState.quarterCountIsInvalid}
               value={vendingMachineState.quarterCount}
               validationMessage={vendingMachineState.quarterValidationMessage}
+              isDisabled={vendingMachineState.coinsDisabled}
             />
           </div>
         </div>
@@ -320,7 +433,9 @@ export function MachinePanel(props: machinePanelProps) {
                   });
                 }
               }}
-              onBlur={(event: any) => handleInputOnBlur(event, "Coke")}
+              onBlur={(event: any) =>
+                handleInputOnBlur(event.target.value, "Coke")
+              }
               isInvalid={vendingMachineState.cokeIsInvalid}
               value={vendingMachineState.cokeCount}
               validationMessage={vendingMachineState.cokeValidationMessage}
@@ -343,7 +458,9 @@ export function MachinePanel(props: machinePanelProps) {
                   });
                 }
               }}
-              onBlur={(event: any) => handleInputOnBlur(event, "Pepsi")}
+              onBlur={(event: any) =>
+                handleInputOnBlur(event.target.value, "Pepsi")
+              }
               isInvalid={vendingMachineState.pepsiIsInvalid}
               value={vendingMachineState.pepsiCount}
               validationMessage={vendingMachineState.pepsiValidationMessage}
@@ -374,7 +491,9 @@ export function MachinePanel(props: machinePanelProps) {
                   });
                 }
               }}
-              onBlur={(event: any) => handleInputOnBlur(event, "Soda")}
+              onBlur={(event: any) =>
+                handleInputOnBlur(event.target.value, "Soda")
+              }
               isInvalid={vendingMachineState.sodaIsInvalid}
               value={vendingMachineState.sodaCount}
               validationMessage={vendingMachineState.sodaValidationMessage}
@@ -392,6 +511,21 @@ export function MachinePanel(props: machinePanelProps) {
             />
           </div>
         </div>
+        {vendingMachineState.showChange ? (
+          <div className={"flex-row"}>
+            <GSChangeDisplay
+              name={"change-display"}
+              id={"change-display"}
+              pennyCount={vendingMachineState.pennyChange}
+              nickelCount={vendingMachineState.nickelChange}
+              dimeCount={vendingMachineState.dimeChange}
+              quarterCount={vendingMachineState.quarterChange}
+              label={"Change Returned"}
+            />
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
     </>
   );
