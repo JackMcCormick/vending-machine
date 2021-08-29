@@ -1,0 +1,96 @@
+* {
+  box-sizing: border-box;
+}
+
+.container {
+  margin: 2rem;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+.GS-coins-label {
+  margin-top: 5px;
+  padding-top: 1px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.GS-soda-label {
+  padding-top: 10px;
+  margin-right: 20px;
+  font-weight: bold;
+}
+
+.GS-Input {
+  display: block;
+  margin-top: 0.5rem;
+  overflow-y: auto;
+  width: 200px;
+  height: 35px;
+}
+
+.GS-Error-Message {
+  color: red;
+  display: block;
+}
+
+.GS-Button {
+  background-color: #4169e1;
+  color: #fff;
+  padding: 15px 32px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+}
+
+button:disabled {
+  background-color: #767676 !important;
+  cursor: default !important;
+}
+
+.GS-Button:hover {
+  background-color: #4682b4;
+  cursor: pointer;
+}
+
+.soda-container {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: row;
+}
+
+.coins-container {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.col {
+  flex: 1;
+}
+
+.soda-col {
+  width: 300px;
+}
+
+.adjust-text-height {
+  margin-top: 10px;
+}
+
+.adjust-error-height {
+  margin-top: -30px;
+}
+
+h1 {
+  color: #4169e1;
+  font-weight: bold;
+}
