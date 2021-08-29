@@ -29,7 +29,6 @@
 }
 
 .GS-Error-Message {
-  margin-top: 0.5rem;
   color: red;
   display: block;
 }
@@ -85,6 +84,10 @@ button:disabled {
 
 .adjust-text-height {
   margin-top: 10px;
+}
+
+.adjust-error-height {
+  margin-top: -30px;
 }
 
 h1 {

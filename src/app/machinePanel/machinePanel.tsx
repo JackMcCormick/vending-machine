@@ -196,7 +196,7 @@ export function MachinePanel(props: machinePanelProps) {
   return (
     <>
       <GSModal
-        body={<p>Accept the charges and recieve your soda?</p>}
+        body={<p>Accept the charges to recieve your soda and change?</p>}
         id={"vending-modal"}
         show={showModal}
         title={"Accept payment?"}
