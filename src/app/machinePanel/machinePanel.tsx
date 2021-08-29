@@ -137,7 +137,7 @@ export function MachinePanel(props: machinePanelProps) {
       updateVendingMachineState({
         disableMachine: true,
         totalDepositIsInvalid: true,
-        totalDepositValidationMessage: "No more soda avaialble, thank you!",
+        totalDepositValidationMessage: "No more soda available, thank you!",
       });
     }
   }, [
