@@ -21,55 +21,67 @@ export function MachinePanel(props: machinePanelProps) {
   function handleModalClose() {
     //Close Modal
     setShowModal(false);
+    //Reset validations
+    updateVendingMachineState({
+      orderIsInvalid: false,
+      orderValidationMessage: "",
+    });
   }
 
   function handleModalAccept() {
-    //Remove drink count
-    vendingMachineState.orderResume.forEach((e) =>
-      subtractCans(e["Drink"], e["Count"])
-    );
-    //Remove drink inputs
-    updateVendingMachineState({
-      cokeCount: 0,
-      pepsiCount: 0,
-      sodaCount: 0,
-    });
-    //Print change and remove coins
-    let totalChange =
-      vendingMachineState.totalCents - vendingMachineState.orderTotal;
-    let remainingChange = 0;
-    let quarterChange = 0;
-    let dimeChange = 0;
-    let nickelChange = 0;
-    let pennyChange = 0;
-    quarterChange = Math.floor(totalChange / 25);
-    remainingChange = totalChange % 25;
-    if (remainingChange > 0) {
-      dimeChange = Math.floor(remainingChange / 10);
-      remainingChange = remainingChange % 10;
+    //Check if user has enough money
+    if (vendingMachineState.orderTotal <= vendingMachineState.totalCents) {
+      //Remove drink count
+      vendingMachineState.orderResume.forEach((e) =>
+        subtractCans(e["Drink"], e["Count"])
+      );
+      //Remove drink inputs
+      updateVendingMachineState({
+        cokeCount: 0,
+        pepsiCount: 0,
+        sodaCount: 0,
+      });
+      //Print change and remove coins
+      let totalChange =
+        vendingMachineState.totalCents - vendingMachineState.orderTotal;
+      let remainingChange = 0;
+      let quarterChange = 0;
+      let dimeChange = 0;
+      let nickelChange = 0;
+      let pennyChange = 0;
+      quarterChange = Math.floor(totalChange / 25);
+      remainingChange = totalChange % 25;
       if (remainingChange > 0) {
-        nickelChange = Math.floor(remainingChange / 5);
-        remainingChange = remainingChange % 5;
-        pennyChange = remainingChange;
+        dimeChange = Math.floor(remainingChange / 10);
+        remainingChange = remainingChange % 10;
+        if (remainingChange > 0) {
+          nickelChange = Math.floor(remainingChange / 5);
+          remainingChange = remainingChange % 5;
+          pennyChange = remainingChange;
+        }
       }
-    }
-    updateVendingMachineState({
-      pennyChange: pennyChange,
-      nickelChange: nickelChange,
-      dimeChange: dimeChange,
-      quarterChange: quarterChange,
-      showChange: true,
-      pennyCount: 0,
-      nickelCount: 0,
-      dimeCount: 0,
-      quarterCount: 0,
-      totalCents: 0,
-      orderTotal: 0,
-    });
-    //If no remaining drinks then disable inputs + Validation Msg
+      updateVendingMachineState({
+        pennyChange: pennyChange,
+        nickelChange: nickelChange,
+        dimeChange: dimeChange,
+        quarterChange: quarterChange,
+        showChange: true,
+        pennyCount: 0,
+        nickelCount: 0,
+        dimeCount: 0,
+        quarterCount: 0,
+        totalCents: 0,
+        orderTotal: 0,
+      });
 
-    //Close Modal
-    setShowModal(false);
+      //Close Modal
+      setShowModal(false);
+    } else {
+      updateVendingMachineState({
+        orderIsInvalid: true,
+        orderValidationMessage: "Not sufficient change in the inventory",
+      });
+    }
   }
 
   function subtractCans(type: string, amount: number) {
@@ -115,6 +127,17 @@ export function MachinePanel(props: machinePanelProps) {
     } else {
       updateVendingMachineState({
         isButtonDisabled: false,
+      });
+    }
+    if (
+      vendingMachineState.cokeAvailable === 0 &&
+      vendingMachineState.pepsiAvailable === 0 &&
+      vendingMachineState.sodaAvailable === 0
+    ) {
+      updateVendingMachineState({
+        disableMachine: true,
+        totalDepositIsInvalid: true,
+        totalDepositValidationMessage: "No more soda avaialble, thank you!",
       });
     }
   }, [
@@ -303,6 +326,8 @@ export function MachinePanel(props: machinePanelProps) {
         title={"Accept payment?"}
         handleClose={() => handleModalClose()}
         handleAccept={() => handleModalAccept()}
+        isInvalid={vendingMachineState.orderIsInvalid}
+        validationMessage={vendingMachineState.orderValidationMessage}
       />
       <div className={"container"}>
         <div className={"flex-row"}>
@@ -331,7 +356,7 @@ export function MachinePanel(props: machinePanelProps) {
               isInvalid={vendingMachineState.pennyCountIsInvalid}
               value={vendingMachineState.pennyCount}
               validationMessage={vendingMachineState.pennyValidationMessage}
-              isDisabled={vendingMachineState.coinsDisabled}
+              isDisabled={vendingMachineState.disableMachine}
             />
           </div>
           <div className={"col"}>
@@ -353,7 +378,7 @@ export function MachinePanel(props: machinePanelProps) {
               isInvalid={vendingMachineState.nickelCountIsInvalid}
               value={vendingMachineState.nickelCount}
               validationMessage={vendingMachineState.nickelValidationMessage}
-              isDisabled={vendingMachineState.coinsDisabled}
+              isDisabled={vendingMachineState.disableMachine}
             />
           </div>
           <div className={"col"}>
@@ -375,7 +400,7 @@ export function MachinePanel(props: machinePanelProps) {
               isInvalid={vendingMachineState.dimeCountIsInvalid}
               value={vendingMachineState.dimeCount}
               validationMessage={vendingMachineState.dimeValidationMessage}
-              isDisabled={vendingMachineState.coinsDisabled}
+              isDisabled={vendingMachineState.disableMachine}
             />
           </div>
           <div className={"col"}>
@@ -397,7 +422,7 @@ export function MachinePanel(props: machinePanelProps) {
               isInvalid={vendingMachineState.quarterCountIsInvalid}
               value={vendingMachineState.quarterCount}
               validationMessage={vendingMachineState.quarterValidationMessage}
-              isDisabled={vendingMachineState.coinsDisabled}
+              isDisabled={vendingMachineState.disableMachine}
             />
           </div>
         </div>
@@ -441,6 +466,7 @@ export function MachinePanel(props: machinePanelProps) {
               validationMessage={vendingMachineState.cokeValidationMessage}
               availableDrinks={vendingMachineState.cokeAvailable}
               cost={vendingMachineState.cokeCost}
+              isDisabled={vendingMachineState.disableMachine}
             />
           </div>
         </div>
@@ -466,6 +492,7 @@ export function MachinePanel(props: machinePanelProps) {
               validationMessage={vendingMachineState.pepsiValidationMessage}
               availableDrinks={vendingMachineState.pepsiAvailable}
               cost={vendingMachineState.pepsiCost}
+              isDisabled={vendingMachineState.disableMachine}
             />
           </div>
           <div className={"col"}>
@@ -499,6 +526,7 @@ export function MachinePanel(props: machinePanelProps) {
               validationMessage={vendingMachineState.sodaValidationMessage}
               availableDrinks={vendingMachineState.sodaAvailable}
               cost={vendingMachineState.sodaCost}
+              isDisabled={vendingMachineState.disableMachine}
             />
           </div>
           <div className={"col"}>

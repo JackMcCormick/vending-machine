@@ -11,6 +11,7 @@ export interface GSSodaInputProps {
   validationMessage?: string;
   availableDrinks?: number;
   cost: number;
+  isDisabled?: boolean;
 }
 export interface GSSodaInputState {}
 
@@ -57,6 +58,7 @@ export class GSSodaInput extends React.Component<
               onChange={this.onChange}
               onBlur={this.onBlur}
               value={this.props.value}
+              disabled={this.props.isDisabled}
             />
             {this.props.isInvalid && (
               <span className={"GS-Error-Message"} id={this.props.id}>

@@ -9,6 +9,8 @@ export interface GSModalProps {
   title?: string;
   handleClose: any;
   handleAccept: any;
+  isInvalid?: boolean;
+  validationMessage?: string;
 }
 export interface GSModalState {
   show: boolean;
@@ -47,7 +49,16 @@ export class GSModal extends React.Component<GSModalProps, GSModalState> {
             <h3>{this.props.title}</h3>
           </Modal.Title>
         </Modal.Header>
-        {this.props.body && <Modal.Body>{this.props.body}</Modal.Body>}
+        {this.props.body && (
+          <Modal.Body>
+            {this.props.body}
+            {this.props.isInvalid && (
+              <span className={"GS-Error-Message"} id={this.props.id}>
+                {this.props.validationMessage}
+              </span>
+            )}
+          </Modal.Body>
+        )}
         <Modal.Footer>
           <GSButton
             id={"modal-accept-button"}
