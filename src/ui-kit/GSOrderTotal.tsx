@@ -27,7 +27,7 @@ export class GSOrderTotal extends React.Component<
               {this.props.label}
             </label>
           </div>
-          <span>$</span>
+          <span className={"adjust-text-height"}>$</span>
           {this.props.amount && this.props.amount > 0 && (
             <div className={"order-col adjust-text-height"}>
               <p>{(this.props.amount / 100).toFixed(2)}</p>

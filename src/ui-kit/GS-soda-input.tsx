@@ -10,7 +10,7 @@ export interface GSSodaInputProps {
   value?: string | number;
   validationMessage?: string;
   availableDrinks?: number;
-  cost?: number;
+  cost: number;
 }
 export interface GSSodaInputState {}
 
@@ -45,8 +45,8 @@ export class GSSodaInput extends React.Component<
               {this.props.label}
             </label>
             <p>
-              {this.props.availableDrinks} drinks available, Cost ={" "}
-              {this.props.cost}
+              {this.props.availableDrinks} drinks available, Cost ={" $"}
+              {(this.props.cost / 100).toFixed(2)}
             </p>
           </div>
           <div className={"soda-col"}>
